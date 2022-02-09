@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  web:
+    build:
+    # So the first thing we're going to do is add a context, this context option is essentially specifying
+    # where we want all the files and folders for this image to be pulled from.
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+    #  do not try to map a folder up against node modules inside the container,
+      - /app/node_modules
+    # Map the current folder outside the container
+    # into the app inside the container
+      - .:/app
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    command: ["npm", "run", "test"]
